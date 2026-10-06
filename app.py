@@ -36,11 +36,41 @@ st.set_page_config(
 # ---------------------------------------------------------
 st.markdown("""
 <style>
-    /* Clean base page styling */
-    .stApp {
-        background-color: #fbfcfb;
+    /* Force pure black/charcoal text universally regardless of OS dark mode */
+    html, body, [data-testid="stAppViewContainer"], [data-testid="stHeader"], [data-testid="stSidebar"], .stApp {
+        background-color: #ffffff !important;
+        color: #111827 !important;
     }
-    
+
+    h1, h2, h3, h4, h5, h6,
+    p, span, div, label, li, a,
+    .stMarkdown,
+    [data-testid="stMarkdownContainer"],
+    [data-testid="stMarkdownContainer"] p,
+    [data-testid="stMarkdownContainer"] span,
+    [data-testid="stMarkdownContainer"] h1,
+    [data-testid="stMarkdownContainer"] h2,
+    [data-testid="stMarkdownContainer"] h3,
+    [data-testid="stMarkdownContainer"] h4,
+    [data-testid="stWidgetLabel"] label,
+    [data-testid="stWidgetLabel"] p,
+    .stCaption,
+    [data-testid="stCaptionContainer"],
+    [data-testid="stExpander"] summary,
+    [data-testid="stExpander"] details,
+    [data-testid="stExpander"] p,
+    [data-testid="stSidebar"] p,
+    [data-testid="stSidebar"] span,
+    [data-testid="stSidebar"] div,
+    [data-testid="stSidebar"] label,
+    [data-testid="stSidebar"] h1,
+    [data-testid="stSidebar"] h2,
+    [data-testid="stSidebar"] h3,
+    [data-testid="stSidebar"] h4,
+    button[data-baseweb="tab"] div {
+        color: #111827 !important;
+    }
+
     .archive-header {
         border-bottom: 3px solid #1e4d38;
         padding-bottom: 1.2rem;
@@ -51,64 +81,67 @@ st.markdown("""
         font-family: "Georgia", "Times New Roman", serif;
         font-size: 2.2rem;
         font-weight: 700;
-        color: #133927;
+        color: #111827 !important;
         letter-spacing: -0.01em;
         margin: 0 0 0.3rem 0;
     }
     
     .archive-subtitle {
         font-size: 1.05rem;
-        color: #334d3d;
+        color: #1f2937 !important;
         margin: 0 0 0.6rem 0;
         line-height: 1.4;
     }
 
     .provenance-card {
         background-color: #f0f7f3;
-        border-left: 4px solid #2d6a4f;
+        border-left: 4px solid #1e4d38;
         border-radius: 4px;
         padding: 0.85rem 1.1rem;
         font-size: 0.88rem;
-        color: #1f3d2b;
+        color: #0f172a !important;
         margin-top: 0.8rem;
         line-height: 1.45;
+    }
+    .provenance-card strong {
+        color: #111827 !important;
     }
     
     .meta-tag {
         display: inline-block;
         background: #e8f5ec;
-        color: #1b4332;
+        color: #111827 !important;
         font-size: 0.82rem;
         font-weight: 600;
         padding: 3px 10px;
         border-radius: 4px;
         margin-right: 6px;
         margin-bottom: 6px;
-        border: 1px solid #b7dfc6;
+        border: 1px solid #1e4d38;
     }
 
-    /* High-contrast bright metric cards */
+    /* High-contrast metric cards with pure black text */
     .metric-card {
         background: #ffffff;
-        border: 1.5px solid #2d6a4f;
+        border: 1.5px solid #1e4d38;
         border-top: 4px solid #1e4d38;
         border-radius: 6px;
         padding: 0.9rem 1rem;
         text-align: left;
-        box-shadow: 0 1px 3px rgba(30, 77, 56, 0.08);
+        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
     }
 
     .metric-card-val {
         font-size: 1.5rem;
-        font-weight: 700;
-        color: #133927;
+        font-weight: 800;
+        color: #000000 !important;
         line-height: 1.2;
     }
 
     .metric-card-lbl {
         font-size: 0.74rem;
-        font-weight: 600;
-        color: #4b6354;
+        font-weight: 700;
+        color: #1f2937 !important;
         text-transform: uppercase;
         letter-spacing: 0.05em;
         margin-top: 0.3rem;
@@ -116,18 +149,23 @@ st.markdown("""
 
     .history-card {
         background-color: #ffffff;
-        border: 1px solid #d1e2d7;
+        border: 1.5px solid #cbd5e1;
+        border-left: 4px solid #1e4d38;
         border-radius: 6px;
         padding: 1.2rem;
         margin-bottom: 1rem;
         line-height: 1.6;
-        color: #1f2937;
+        color: #111827 !important;
+    }
+
+    .history-card p, .history-card li, .history-card strong {
+        color: #111827 !important;
     }
 
     .history-header {
-        color: #1e4d38;
-        font-size: 1.08rem;
-        font-weight: 700;
+        color: #1e4d38 !important;
+        font-size: 1.1rem;
+        font-weight: 800;
         margin-bottom: 0.5rem;
         font-family: "Georgia", serif;
     }
