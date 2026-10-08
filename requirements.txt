@@ -4,3 +4,4 @@ plotly
 soundfile
 pandas
 onnxruntime
+setuptools
