@@ -9,6 +9,7 @@ import glob
 import tempfile
 import numpy as np
 import pandas as pd
+import soundfile as sf
 import streamlit as st
 import plotly.graph_objects as go
 import plotly.express as px
@@ -79,6 +80,13 @@ st.markdown("""
     [data-testid="stSidebar"] h4,
     button[data-baseweb="tab"] div {
         color: #111827 !important;
+    }
+
+    audio {
+        width: 100% !important;
+        border-radius: 6px !important;
+        margin-top: 0.2rem !important;
+        margin-bottom: 0.4rem !important;
     }
 
     .archive-header {
@@ -205,6 +213,27 @@ def load_corpus_catalog() -> pd.DataFrame:
 @st.cache_data(show_spinner=False)
 def load_and_analyze_file(filepath: str) -> dict:
     return compute_track_analysis(filepath)
+
+
+def get_playback_audio(filepath: str) -> tuple[str, str]:
+    """
+    Returns (path_to_audio, mime_format) ensuring universal cross-browser compatibility
+    (especially Safari on macOS/iOS which fails on uncompressed 22kHz PCM WAV).
+    """
+    base, ext = os.path.splitext(filepath)
+    mp3_path = base + ".mp3"
+    if os.path.exists(mp3_path):
+        return mp3_path, "audio/mp3"
+
+    if ext.lower() in [".mp3", ".ogg", ".flac"]:
+        return filepath, f"audio/{ext.lower()[1:]}"
+
+    try:
+        data, sr = sf.read(filepath)
+        sf.write(mp3_path, data, sr, format="MP3")
+        return mp3_path, "audio/mp3"
+    except Exception:
+        return filepath, "audio/wav"
 
 
 df_corpus = load_corpus_catalog()
@@ -372,10 +401,24 @@ with col_meta:
 
 with col_player:
     st.markdown("#### Audio Playback")
-    with open(audio_path, "rb") as f_aud:
-        audio_bytes = f_aud.read()
-    st.audio(audio_bytes, format="audio/wav")
-    st.caption(f"Duration: **{duration:.2f} s** | Sampling Rate: **{TARGET_SR:,} Hz** | Standard PCM 16-bit Mono")
+    playback_file, playback_fmt = get_playback_audio(audio_path)
+    try:
+        st.audio(playback_file, format=playback_fmt)
+    except Exception:
+        with open(playback_file, "rb") as f_aud:
+            st.audio(f_aud.read(), format=playback_fmt)
+
+    if os.path.exists(audio_path):
+        with open(audio_path, "rb") as f_wav:
+            wav_bytes = f_wav.read()
+        st.download_button(
+            label="Download Master Archival WAV",
+            data=wav_bytes,
+            file_name=os.path.basename(audio_path),
+            mime="audio/wav",
+            use_container_width=True
+        )
+    st.caption(f"Duration: **{duration:.2f} s** | Format: **{playback_fmt.split('/')[-1].upper()}** (Web Stream) & PCM 16-bit")
 
 st.divider()
 
